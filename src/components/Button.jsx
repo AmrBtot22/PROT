@@ -1,27 +1,29 @@
 /* eslint-disable no-unused-vars */
-const Button = ({ text, className, id }) => {
+const Button = ({ text, className, id, showIcon = true }) => {
   return (
     <a
       onClick={(e) => {
-        e.preventDefault(); 
-        const target = document.getElementById("work"); // بدل "counter"
+        e.preventDefault();
+        const target = document.getElementById("work");
 
         if (target) {
-          const offset = window.innerHeight * 0.15; 
+          const offset = window.innerHeight * 0.15;
           const top =
             target.getBoundingClientRect().top + window.pageYOffset - offset;
 
           window.scrollTo({ top, behavior: "smooth" });
         }
-      }} 
+      }}
       className={`${className ?? ''} cta-wrapper`}
     >
       <div className="cta-button group">
         <div className="bg-circle" />
         <p className="text">{text}</p>
-        <div className="arrow-wrapper">
-          <img src="/Public/images/arrow-down.svg" alt="arrow" />
-        </div>
+        {showIcon && (
+          <div className="arrow-wrapper">
+            <img src="/images/arrow-down.svg" alt="arrow" />
+          </div>
+        )}
       </div>
     </a>
   );

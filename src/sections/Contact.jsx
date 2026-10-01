@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable no-unused-vars */
-import React, { useRef, useState, useCallback } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import emailjs from "@emailjs/browser";
 
@@ -22,6 +22,15 @@ const Contact = () => {
   });
 
   const [loading, setLoading] = useState(false);
+
+  // State للتحقق من حجم الشاشة (desktop أم لا)
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1280);
+
+  useEffect(() => {
+    const handleResize = () => setIsDesktop(window.innerWidth >= 1280);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Handle form change
   const handleChange = (e) => {
@@ -149,13 +158,15 @@ const Contact = () => {
         </form>
       </motion.div>
 
-      {/* Earth Canvas */}
-      <motion.div
-        variants={slideIn("right", "tween", 0.2, 1)}
-        className="xl:flex-1 xl:h-125 md:h-100 h-75 relative z-10"
-      >
-        <EarthCanvas />
-      </motion.div>
+      {/* Earth Canvas - يظهر فقط على desktop */}
+      {isDesktop && (
+        <motion.div
+          variants={slideIn("right", "tween", 0.2, 1)}
+          className="xl:flex-1 xl:h-125 md:h-100 h-75 relative z-10"
+        >
+          <EarthCanvas />
+        </motion.div>
+      )}
     </div>
   );
 };

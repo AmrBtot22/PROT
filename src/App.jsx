@@ -12,6 +12,7 @@ import { Footer } from "./sections/Footer";
 
 // Import SnowCanvas
 import SnowCanvas from "./components/SnowCanvas";
+import { TestimonialsSection } from "./sections/Testm";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
       <FeatureCards />
       <TechOrbit />
       <Experience />
+      <TestimonialsSection/>
       <Contact />
       <Footer />
     </>

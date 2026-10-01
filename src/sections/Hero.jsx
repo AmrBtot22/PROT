@@ -1,16 +1,24 @@
 /* eslint-disable no-unused-vars */
 import { words } from "../constants/index";
-import React, { useRef } from "react";
-import { motion } from "framer-motion";
+import React, { useRef, useState, useEffect } from "react";
+import { motion, useInView } from "framer-motion";
 import Button from "@/components/Button";
 import HeroEx from "@/components/HeroMoudels/HeroEx";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import AnimatedCounter from "@/components/AnimatedCounter";
-import { useInView } from "framer-motion";
 
 const Hero = () => {
   const heroRef = useRef(null);
+  const [isDesktop, setIsDesktop] = useState(true);
+
+  // التحقق من حجم الشاشة
+  useEffect(() => {
+    const handleResize = () => setIsDesktop(window.innerWidth > 768);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const isInView = useInView(heroRef, {
     once: true,
@@ -35,16 +43,14 @@ const Hero = () => {
   );
 
   return (
-    <section
-      ref={heroRef}
-      id="hero"
-      className="relative overflow-hidden"
-    >
+    <section ref={heroRef} id="hero" className="relative overflow-hidden">
+      {/* Background */}
       <div className="absolute top-0 left-0 z-0">
         <img src="/images/bg.png" alt="background" />
       </div>
 
-      <div className="hero-layout">
+      <div className="hero-layout relative z-20">
+        {/* TEXT */}
         <header className="flex flex-col justify-center md:w-full w-screen md:px-20 px-5">
           <div className="flex flex-col gap-7">
             <div className="hero-text">
@@ -54,7 +60,7 @@ const Hero = () => {
                   <span className="wrapper">
                     {words.map((word) => (
                       <span
-                        key={word.id}   
+                        key={word.id}
                         className="flex items-center md:gap-3 gap-1 pb-2"
                       >
                         <img
@@ -72,12 +78,13 @@ const Hero = () => {
               <h1>the Delvier Result</h1>
             </div>
 
+            {/* INTRO */}
             <div className="flex flex-col gap-2">
               <motion.p
                 initial={{ opacity: 0, x: -30 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.6 }}
                 className="flex items-center gap-2 text-2xl sm:text-4xl font-bold"
               >
                 <motion.span
@@ -98,11 +105,7 @@ const Hero = () => {
                 initial={{ opacity: 0, x: -30 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{
-                  duration: 0.6,
-                  delay: 0.5,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
+                transition={{ duration: 0.6, delay: 0.5 }}
                 className="flex items-center gap-2 text-lg sm:text-xl md:text-2xl text-muted-foreground"
               >
                 <motion.span
@@ -112,30 +115,28 @@ const Hero = () => {
                 >
                   💻
                 </motion.span>
-
-                <motion.span
-                  className="ml-2"
-                  whileHover={{ scale: 1.03, color: "#7c3aed" }}
-                  transition={{ duration: 0.3 }}
-                >
-                  Frontend Developer
-                </motion.span>
+                <span className="ml-2">Frontend Developer</span>
               </motion.p>
             </div>
 
-            <Button
-              className="md:w-80 md:h-16 w-60 h-12"
-              id="button"
-              text="watch my projects"
-            />
+            {/* BUTTON */}
+            <div className="flex md:justify-start justify-center">
+              <Button
+                className={isDesktop ? "md:w-80 md:h-16 w-60 h-12" : "w-60 h-12"}
+                id={isDesktop ? "button" : "button-mobile"}
+                text="watch my projects"
+                showIcon={isDesktop} // السهم يظهر فقط على الديسكتوب
+              />
+            </div>
           </div>
         </header>
 
-        <figure>
-          <div className="hero-3d-layout">
+        {/* 3D HeroEx – Desktop only */}
+        {isDesktop && (
+          <figure className="hero-3d-layout">
             {isInView && <HeroEx />}
-          </div>
-        </figure>
+          </figure>
+        )}
       </div>
 
       <AnimatedCounter />
